@@ -1,0 +1,27 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Restore packages
+      run: dotnet restore backend/DevOps_CA.sln
+      
+    - name: Build
+      run: dotnet build backend/DevOps_CA.sln --no-restore
+      
+    - name: Check formatting
+      run: dotnet format backend/DevOps_CA.sln --verify-no-changes
