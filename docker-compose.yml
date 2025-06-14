@@ -1,0 +1,14 @@
+services:
+  # Database service
+  database:
+    build: ./database
+    container_name: devops-database
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+# Named volumes for data persistence
+volumes:
+  db_data: 
+    driver: local # storage local on my machine
