@@ -8,6 +8,26 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  # Backend API service
+  backend:
+    build: ./backend
+    container_name: devops-backend
+    ports:
+      - "5000:8080"
+    depends_on:
+      - database # The backend needs the database
+    environment:
+      - ConnectionStrings__Default=Host=devops-database;Port=5432;Database=tabloid;Username=postgres;Password=yourpassword
+
+  # Frontend React service
+  frontend:
+    build: ./frontend
+    container_name: devops-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend # The frontend needs the backend to function
+
 # Named volumes for data persistence
 volumes:
   db_data: 
