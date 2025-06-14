@@ -125,7 +125,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ onClose, onPostCreated 
                 fontSize: '14px',
                 boxSizing: 'border-box'
               }}
-              disabled={loading
+              disabled={loading}
             />
             <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
               {title.length}/200 characters
