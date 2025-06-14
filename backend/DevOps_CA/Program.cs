@@ -27,7 +27,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-    
+
     try
     {
         // This will create the database if it doesn't exist and apply any pending migrations

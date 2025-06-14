@@ -11,10 +11,10 @@ namespace DevOps_CA.Controllers;
 public class PostsController : ControllerBase
 {
     private readonly ApplicationContext _context;
-    
-    
+
+
     public PostsController(ApplicationContext context) => _context = context;
-    
+
     [HttpPost]
     public async Task<ActionResult<Post>> Create(CreatePostDTO dto)
     {
@@ -32,7 +32,7 @@ public class PostsController : ControllerBase
 
         _context.Posts.Add(post);
         await _context.SaveChangesAsync();
-    
+
         return CreatedAtAction(nameof(GetById), new { id = post.Id }, post);
     }
 
@@ -42,7 +42,7 @@ public class PostsController : ControllerBase
         var posts = await _context.Posts
             .AsNoTracking() // Optimization: no change tracking needed for read-only operations
             .ToListAsync();
-            
+
         return Ok(posts);
     }
 
@@ -52,13 +52,13 @@ public class PostsController : ControllerBase
         var post = await _context.Posts
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id);
-            
+
         if (post == null)
             return NotFound();
-            
+
         return Ok(post);
     }
-    
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
@@ -70,7 +70,7 @@ public class PostsController : ControllerBase
         await _context.SaveChangesAsync();
         return NoContent();
     }
-    
+
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, EditPostDTO dto)
     {
@@ -89,7 +89,7 @@ public class PostsController : ControllerBase
         existingPost.Title = dto.Title;
         existingPost.Department = dto.Department;
         existingPost.UpdatedAt = DateTime.UtcNow; // Track when it was updated
-    
+
         try
         {
             await _context.SaveChangesAsync();
