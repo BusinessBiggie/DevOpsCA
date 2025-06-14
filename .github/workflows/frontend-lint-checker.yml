@@ -1,8 +1,10 @@
-name: Frontend build and lint check
+name: Frontend Check
 
 on:
   pull_request:
     branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
 
 jobs:
   build:
@@ -17,10 +19,14 @@ jobs:
         node-version: '20'
         
     - name: Install packages
-      run: npm install
+      run: |
+        cd frontend
+        npm install
       
     - name: Check build
-      run: npm run build
+      run: |
+        cd frontend
+        npm run build
 
   lint:
     runs-on: ubuntu-latest
@@ -35,7 +41,11 @@ jobs:
         node-version: '20'
         
     - name: Install packages
-      run: npm install
+      run: |
+        cd frontend
+        npm install
       
     - name: Check linting
-      run: npm run lint
+      run: |
+        cd frontend
+        npm run lint
