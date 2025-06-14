@@ -1,0 +1,26 @@
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install PostgreSQL
+RUN apt-get update && apt-get install -y postgresql postgresql-contrib
+
+# Switch to postgres user and initialize DB
+USER postgres
+
+# Initialize database
+RUN /usr/lib/postgresql/*/bin/initdb -D /var/lib/postgresql/data
+
+# Configure PostgreSQL to accept connections
+RUN echo "host all all 0.0.0.0/0 trust" >> /var/lib/postgresql/data/pg_hba.conf
+RUN echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
+
+# Start PostgreSQL, create user and database
+RUN /usr/lib/postgresql/*/bin/pg_ctl -D /var/lib/postgresql/data -l /var/lib/postgresql/data/logfile start && \
+    sleep 5 && \
+    psql -c "CREATE USER anna WITH PASSWORD 'sletikkehardcoded';" && \
+    psql -c "ALTER USER anna CREATEDB;" && \
+    createdb -O anna tabloid && \
+    /usr/lib/postgresql/*/bin/pg_ctl -D /var/lib/postgresql/data stop
+
+EXPOSE 5432
+CMD ["/usr/lib/postgresql/14/bin/postgres", "-D", "/var/lib/postgresql/data"]
