@@ -1,32 +1,38 @@
 // Tabloid.tsx - Main Component
 import { useState, useEffect } from 'react';
-import { User } from 'lucide-react';
+import { User, Plus } from 'lucide-react';
 import { Post } from '../entities/types';
 import { fetchPosts } from '../api/api';
 import LoadingState from './LoadingState';
 import ErrorState from './ErrorState';
 import PostCard from './PostCard';
+import CreatePostForm from './CreatePostForm';
 
 const Tabloid: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+
+  const loadPosts = async (): Promise<void> => {
+    try {
+      const data = await fetchPosts();
+      setPosts(data);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching posts:', err);
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadPosts = async (): Promise<void> => {
-      try {
-        const data = await fetchPosts();
-        setPosts(data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching posts:', err);
-        setError(err instanceof Error ? err.message : 'An unknown error occurred');
-        setLoading(false);
-      }
-    };
-
     loadPosts();
   }, []);
+
+  const handlePostCreated = () => {
+    loadPosts(); // Refresh the posts list
+  };
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
@@ -36,8 +42,31 @@ const Tabloid: React.FC = () => {
       {/* Header */}
       <div style={{ backgroundColor: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderBottom: '1px solid #e5e7eb' }}>
         <div style={{ maxWidth: '896px', margin: '0 auto', padding: '16px 24px' }}>
-          <h1 style={{ fontSize: '30px', fontWeight: 'bold', color: '#111827', margin: 0 }}>VIA Tabloid</h1>
-          <p style={{ color: '#6b7280', marginTop: '4px', margin: 0 }}>Latest updates and announcements</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h1 style={{ fontSize: '30px', fontWeight: 'bold', color: '#111827', margin: 0 }}>VIA Tabloid</h1>
+              <p style={{ color: '#6b7280', marginTop: '4px', margin: 0 }}>Latest updates and announcements</p>
+            </div>
+            <button
+              onClick={() => setShowCreateForm(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 16px',
+                backgroundColor: '#059669',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              <Plus size={18} />
+              New Post
+            </button>
+          </div>
         </div>
       </div>
 
@@ -47,12 +76,34 @@ const Tabloid: React.FC = () => {
           <div style={{ textAlign: 'center', padding: '48px 0' }}>
             <User size={48} style={{ margin: '0 auto 16px auto', color: '#d1d5db' }} />
             <h3 style={{ fontSize: '18px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>No posts yet</h3>
-            <p style={{ color: '#6b7280' }}>Check back later for updates!</p>
+            <p style={{ color: '#6b7280', marginBottom: '20px' }}>Get started by creating your first post!</p>
+            <button
+              onClick={() => setShowCreateForm(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 20px',
+                backgroundColor: '#059669',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              <Plus size={18} />
+              Create First Post
+            </button>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
+              <PostCard 
+                key={post.id} 
+                post={post} 
+              />
             ))}
           </div>
         )}
@@ -64,6 +115,14 @@ const Tabloid: React.FC = () => {
           <p>VIA Tabloid • Stay updated with the latest news</p>
         </div>
       </div>
+
+      {/* Modals */}
+      {showCreateForm && (
+        <CreatePostForm
+          onClose={() => setShowCreateForm(false)}
+          onPostCreated={handlePostCreated}
+        />
+      )}
     </div>
   );
 };
