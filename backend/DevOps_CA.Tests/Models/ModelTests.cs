@@ -32,7 +32,7 @@ public class PostTests
         Assert.Equal("Content", post.Content);
         Assert.Equal(Department.Marketing, post.Department);
     }
-    
+
     [Fact]
     public void CreatePostDTO_ValidData_NoErrors()
     {
@@ -126,7 +126,7 @@ public class PostTests
         Assert.False(isValid);
         Assert.NotEmpty(errors);
     }
-    
+
     [Fact]
     public void EditPostDTO_ValidData_NoErrors()
     {
