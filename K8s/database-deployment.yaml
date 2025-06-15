@@ -22,12 +22,16 @@ spec:
       labels:
         io.kompose.service: database
     spec:
-      imagePullSecrets:
-        - name: ghcr-secret
       containers:
-        - image: ghcr.io/businessbiggie/ca-postgres:latest
-          imagePullPolicy: Always
-          name: database
+        - env:
+            - name: POSTGRES_DB
+              value: tabloid
+            - name: POSTGRES_PASSWORD
+              value: sletikkehardcoded
+            - name: POSTGRES_USER
+              value: anna
+          image: postgres:15-alpine
+          name: devops-database
           ports:
             - containerPort: 5432
               protocol: TCP
