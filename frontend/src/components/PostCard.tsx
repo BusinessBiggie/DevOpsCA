@@ -1,14 +1,14 @@
 // PostCard.tsx
-import React from 'react';
-import { Clock, Building2 } from 'lucide-react';
+import { Clock, Building2, Trash2 } from 'lucide-react';
 import { Post } from '../entities/types';
 import { formatDate, getDepartmentColor, departmentNames } from '../utils/utils';
 
 interface PostCardProps {
   post: Post;
+  onDelete: (post: Post) => void;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, onDelete }) => {
   return (
     <article 
       style={{ 
@@ -23,9 +23,29 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <div style={{ padding: '24px' }}>
         {/* Header */}
         <div style={{ marginBottom: '16px' }}>
-          <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#111827', marginBottom: '8px', lineHeight: '1.25' }}>
-            {post.title}
-          </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#111827', margin: 0, lineHeight: '1.25', flex: 1 }}>
+              {post.title}
+            </h2>
+            <div style={{ display: 'flex', gap: '8px', marginLeft: '16px' }}>
+              <button
+                onClick={() => onDelete(post)}
+                style={{
+                  padding: '6px',
+                  border: 'none',
+                  borderRadius: '4px',
+                  backgroundColor: '#fef2f2',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Delete post"
+              >
+                <Trash2 size={16} color="#dc2626" />
+              </button>
+            </div>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '14px', color: '#6b7280' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Building2 size={16} />
