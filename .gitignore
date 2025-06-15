@@ -360,6 +360,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+backend/.idea
+
 # Frontend .gitignore
 
 # Logs

@@ -1,14 +1,15 @@
 // PostCard.tsx
-import { Clock, Building2, Trash2 } from 'lucide-react';
+import { Clock, Building2, Edit2, Trash2 } from 'lucide-react';
 import { Post } from '../entities/types';
 import { formatDate, getDepartmentColor, departmentNames } from '../utils/utils';
 
 interface PostCardProps {
   post: Post;
+  onEdit: (post: Post) => void;
   onDelete: (post: Post) => void;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post, onDelete }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, onEdit, onDelete }) => {
   return (
     <article 
       style={{ 
@@ -28,6 +29,22 @@ const PostCard: React.FC<PostCardProps> = ({ post, onDelete }) => {
               {post.title}
             </h2>
             <div style={{ display: 'flex', gap: '8px', marginLeft: '16px' }}>
+              <button
+                onClick={() => onEdit(post)}
+                style={{
+                  padding: '6px',
+                  border: 'none',
+                  borderRadius: '4px',
+                  backgroundColor: '#f3f4f6',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Edit post"
+              >
+                <Edit2 size={16} color="#374151" />
+              </button>
               <button
                 onClick={() => onDelete(post)}
                 style={{

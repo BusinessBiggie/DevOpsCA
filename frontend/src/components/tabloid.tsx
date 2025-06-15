@@ -7,6 +7,7 @@ import LoadingState from './LoadingState';
 import ErrorState from './ErrorState';
 import PostCard from './PostCard';
 import CreatePostForm from './CreatePostForm';
+import EditPostForm from './EditPostForm';
 import DeleteConfirmation from './DeleteConfirmation';
 
 const Tabloid: React.FC = () => {
@@ -14,6 +15,7 @@ const Tabloid: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [deletingPost, setDeletingPost] = useState<Post | null>(null);
 
   const loadPosts = async (): Promise<void> => {
@@ -36,8 +38,16 @@ const Tabloid: React.FC = () => {
     loadPosts(); // Refresh the posts list
   };
 
+  const handlePostUpdated = () => {
+    loadPosts(); // Refresh the posts list
+  };
+
   const handlePostDeleted = () => {
     loadPosts(); // Refresh the posts list
+  };
+
+  const handleEditClick = (post: Post) => {
+    setEditingPost(post);
   };
 
   const handleDeleteClick = (post: Post) => {
@@ -112,7 +122,8 @@ const Tabloid: React.FC = () => {
             {posts.map((post) => (
               <PostCard 
                 key={post.id} 
-                post={post}
+                post={post} 
+                onEdit={handleEditClick}
                 onDelete={handleDeleteClick}
               />
             ))}
@@ -123,7 +134,7 @@ const Tabloid: React.FC = () => {
       {/* Footer */}
       <div style={{ backgroundColor: 'white', borderTop: '1px solid #e5e7eb', marginTop: '48px' }}>
         <div style={{ maxWidth: '896px', margin: '0 auto', padding: '32px 24px', textAlign: 'center', color: '#6b7280' }}>
-          <p>Company Tabloid • Stay updated with the latest news</p>
+          <p>VIA Tabloid • Stay updated with the latest news</p>
         </div>
       </div>
 
@@ -132,6 +143,14 @@ const Tabloid: React.FC = () => {
         <CreatePostForm
           onClose={() => setShowCreateForm(false)}
           onPostCreated={handlePostCreated}
+        />
+      )}
+
+      {editingPost && (
+        <EditPostForm
+          post={editingPost}
+          onClose={() => setEditingPost(null)}
+          onPostUpdated={handlePostUpdated}
         />
       )}
 
