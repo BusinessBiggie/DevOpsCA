@@ -1,10 +1,14 @@
 services:
   # Database service
   database:
-    build: ./database
+    image: postgres:15-alpine
     container_name: devops-database
     ports:
       - "5432:5432"
+    environment:
+      - POSTGRES_DB=tabloid
+      - POSTGRES_USER=anna
+      - POSTGRES_PASSWORD=sletikkehardcoded
     volumes:
       - db_data:/var/lib/postgresql/data
 
