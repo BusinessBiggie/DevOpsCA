@@ -33,7 +33,7 @@ jobs:
       
       - name: Deploy to minikube
         run: |
-          cd k8s
+          cd K8s
           kubectl apply -f .
           
       - name: Wait for deployments
